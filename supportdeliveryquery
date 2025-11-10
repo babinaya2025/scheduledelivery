@@ -1,0 +1,108 @@
+-- ========================================
+
+-- INSERT ENROLLMENTS
+
+-- ========================================
+
+INSERT INTO enrollment (schedule_id, user_id, enrollment_date, status) VALUES
+
+(1, 100, CURRENT_TIMESTAMP, 'approved'),
+
+(1, 101, CURRENT_TIMESTAMP, 'approved'),
+
+(1, 102, CURRENT_TIMESTAMP, 'approved'),
+
+(2, 103, CURRENT_TIMESTAMP, 'approved'),
+
+(2, 104, CURRENT_TIMESTAMP, 'approved'),
+
+(3, 100, CURRENT_TIMESTAMP, 'approved'),
+
+(3, 105, CURRENT_TIMESTAMP, 'approved'),
+
+(4, 101, CURRENT_TIMESTAMP, 'approved'),
+
+(4, 102, CURRENT_TIMESTAMP, 'approved');
+ 
+-- ========================================
+
+-- INSERT WEEKS
+
+-- ========================================
+
+INSERT INTO week (event_id, week_number, drive_link, github_link, assignment_link) VALUES
+
+('EVT001', 1, 'https://drive.google.com/angular-w1', 'https://github.com/training/angular-w1', 'https://drive.google.com/assign-ang-1'),
+
+('EVT001', 2, 'https://drive.google.com/angular-w2', 'https://github.com/training/angular-w2', 'https://drive.google.com/assign-ang-2'),
+
+('EVT001', 3, 'https://drive.google.com/angular-w3', 'https://github.com/training/angular-w3', ''),
+
+('EVT001', 4, '', '', ''),
+
+('EVT002', 1, 'https://drive.google.com/react-w1', 'https://github.com/training/react-w1', 'https://drive.google.com/assign-react-1'),
+
+('EVT002', 2, 'https://drive.google.com/react-w2', 'https://github.com/training/react-w2', 'https://drive.google.com/assign-react-2'),
+
+('EVT003', 1, '', '', ''),
+
+('EVT003', 2, '', '', ''),
+
+('EVT004', 1, '', '', '');
+ 
+-- ========================================
+
+-- INSERT TOPICS
+
+-- ========================================
+
+INSERT INTO topic (week_id, topic_name, covered) VALUES
+
+(1, 'Components & Templates', TRUE),
+
+(1, 'Data Binding', TRUE),
+
+(1, 'Directives', TRUE),
+
+(2, 'Services & DI', TRUE),
+
+(2, 'Observables & RxJS', TRUE),
+
+(2, 'HTTP Client', FALSE),
+
+(3, 'Routing', FALSE),
+
+(3, 'Forms', FALSE),
+
+(3, 'Pipes', FALSE),
+
+(4, 'State Management', FALSE),
+
+(4, 'Testing', FALSE),
+
+(5, 'JSX & Components', TRUE),
+
+(5, 'Props & State', TRUE),
+
+(5, 'Event Handling', TRUE),
+
+(6, 'Hooks', TRUE),
+
+(6, 'Context API', TRUE),
+
+(6, 'React Router', TRUE),
+
+(7, 'Python Basics', FALSE),
+
+(7, 'NumPy', FALSE),
+
+(8, 'Pandas', FALSE),
+
+(8, 'Visualization', FALSE),
+
+(9, 'Express Setup', FALSE),
+
+(9, 'Middleware', FALSE),
+
+(9, 'REST API', FALSE);
+ 
