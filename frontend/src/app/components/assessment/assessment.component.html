@@ -1,0 +1,143 @@
+<div class="assessment-container">
+  <div class="header">
+    <h1>Scheduled Training Assessment Details</h1>
+    <button class="btn btn-primary" (click)="openFormForAdd()">+ Add New Assessment</button>
+  </div>
+
+
+  <div *ngIf="successMessage" class="alert success-alert">
+    {{ successMessage }}
+  </div>
+  <div *ngIf="errorMessage" class="alert error-alert">
+    {{ errorMessage }}
+  </div>
+
+
+  <div *ngIf="showForm" class="form-card">
+    <h2>{{ isEditing ? 'Edit Assessment' : 'Add New Assessment' }}</h2>
+    <form (ngSubmit)="saveAssessment()">
+      <div class="form-group">
+        <label for="scheduleId">Schedule ID:</label>
+        <input type="text" id="scheduleId" name="scheduleId" [(ngModel)]="newAssessment.scheduleId" required>
+      </div>
+      <div class="form-group">
+        <label for="assessmentName">Assessment Name:</label>
+        <input type="text" id="assessmentName" name="assessmentName" [(ngModel)]="newAssessment.assessmentName" required>
+      </div>
+      <div class="form-group">
+        <label for="completionDate">Completion Date:</label>
+        <input type="date" id="completionDate" name="completionDate"
+               [ngModel]="getDateInputString(newAssessment.completionDate)"
+               (ngModelChange)="onCompletionDateChange($event)" required>
+      </div>
+      <div class="form-group">
+        <label for="trainer">Trainer:</label>
+        <input type="text" id="trainer" name="trainer" [(ngModel)]="newAssessment.trainer" required>
+      </div>
+      <div class="form-group">
+        <label for="score">Score:</label>
+        <input type="number" id="score" name="score" [(ngModel)]="newAssessment.score">
+      </div>
+      <div class="form-group">
+        <label for="percentage">Percentage:</label>
+        <input type="number" id="percentage" name="percentage" [(ngModel)]="newAssessment.percentage">
+      </div>
+      <div class="form-group">
+        <label for="status">Status:</label>
+        <select id="status" name="status" [(ngModel)]="newAssessment.status" required>
+          <option *ngFor="let status of statusOptions" [value]="status">{{ status }}</option>
+        </select>
+      </div>
+      <div class="form-actions">
+        <button type="submit" class="btn btn-primary">{{ isEditing ? 'Update' : 'Add' }} Assessment</button>
+        <button type="button" class="btn btn-secondary" (click)="cancelForm()">Cancel</button>
+      </div>
+    </form>
+  </div>
+
+  <div class="filter-card">
+    <h2>Filter Assessments</h2>
+    <div class="filter-group">
+      <div class="form-group">
+        <label for="filterAssessmentName">Assessment Name:</label>
+        <input type="text" id="filterAssessmentName" [(ngModel)]="filterAssessmentName" (input)="applyFilters()" placeholder="Filter by name">
+      </div>
+      <div class="form-group">
+        <label for="filterStatus">Status:</label>
+        <select id="filterStatus" [(ngModel)]="filterStatus" (change)="applyFilters()">
+          <option value="">All</option>
+          <option *ngFor="let status of statusOptions" [value]="status">{{ status }}</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="filterCompletionDate">Completion Date:</label>
+        <input type="date" id="filterCompletionDate" [(ngModel)]="filterCompletionDate" (change)="applyFilters()">
+      </div>
+    </div>
+    <div class="filter-actions">
+      <button class="btn btn-secondary" (click)="clearFilters()">Clear Filters</button>
+    </div>
+  </div>
+
+  <div class="table-card">
+    <h2>Assessments Overview</h2>
+    <div class="table-responsive">
+      <table>
+        <thead>
+        <tr>
+          <th (click)="sortBy('scheduleId')" class="sortable">Schedule ID
+            <span *ngIf="sortColumn === 'scheduleId'">{{ sortDirection === 'asc' ? '▲' : '▼' }}</span>
+          </th>
+          <th (click)="sortBy('assessmentName')" class="sortable">Assessment Name
+            <span *ngIf="sortColumn === 'assessmentName'">{{ sortDirection === 'asc' ? '▲' : '▼' }}</span>
+          </th>
+          <th (click)="sortBy('completionDate')" class="sortable">Completion Date
+            <span *ngIf="sortColumn === 'completionDate'">{{ sortDirection === 'asc' ? '▲' : '▼' }}</span>
+          </th>
+          <th (click)="sortBy('trainer')" class="sortable">Trainer
+            <span *ngIf="sortColumn === 'trainer'">{{ sortDirection === 'asc' ? '▲' : '▼' }}</span>
+          </th>
+          <th (click)="sortBy('score')" class="sortable">Score
+            <span *ngIf="sortColumn === 'score'">{{ sortDirection === 'asc' ? '▲' : '▼' }}</span>
+          </th>
+          <th (click)="sortBy('percentage')" class="sortable">Percentage
+            <span *ngIf="sortColumn === 'percentage'">{{ sortDirection === 'asc' ? '▲' : '▼' }}</span>
+          </th>
+          <th (click)="sortBy('status')" class="sortable">Status
+            <span *ngIf="sortColumn === 'status'">{{ sortDirection === 'asc' ? '▲' : '▼' }}</span>
+          </th>
+          <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr *ngFor="let assessment of filteredAssessments">
+          <td>{{ assessment.scheduleId }}</td>
+          <td>{{ assessment.assessmentName }}</td>
+          <td>{{ formatDate(assessment.completionDate) }}</td>
+          <td>{{ assessment.trainer }}</td>
+          <td>{{ assessment.score !== null ? assessment.score : 'N/A' }}</td>
+          <td>{{ assessment.percentage !== null ? (assessment.percentage | number:'1.0-0') + '%' : 'N/A' }}</td>
+          <td>
+              <span class="status-badge" [ngClass]="{
+                'status-completed': assessment.status === 'Completed',
+                'status-scheduled': assessment.status === 'Scheduled',
+                'status-in-progress': assessment.status === 'In Progress',
+                'status-cancelled': assessment.status === 'Cancelled',
+                'status-failed': assessment.status === 'Failed'
+              }">
+                {{ assessment.status }}
+              </span>
+          </td>
+          <td>
+            <button class="btn btn-secondary btn-small" (click)="openFormForEdit(assessment)">Edit</button>
+            <button class="btn btn-danger btn-small" (click)="deleteAssessment(assessment.id)">Delete</button>
+          </td>
+        </tr>
+        <tr *ngIf="filteredAssessments.length === 0">
+          <td colspan="8" class="no-records">No assessments found.</td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div> 

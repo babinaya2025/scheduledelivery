@@ -1,0 +1,141 @@
+/* src/app/components/dashboard/dashboard.component.css */
+
+/* Module Cards Grid */
+.module-cards-grid {
+  display: grid;
+  /* --- UPDATED: Adjusted minmax for slightly smaller cards --- */
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); /* Allowing more cards or smaller cards */
+  gap: var(--spacing-container);
+  width: 100%;
+  /* --- UPDATED: Adjusted max-width for better fit --- */
+  max-width: 900px; /* Slightly reduced max-width for better visual balance */
+  padding: var(--spacing-container); /* Uniform padding around the grid */
+  margin: 0 auto; /* Center the grid horizontally within app-main-content */
+  background-color: transparent; /* No background for the grid container itself */
+  border: none;
+  border-radius: 0;
+  box-shadow: none;
+}
+
+.module-card {
+  background-color: var(--card-bg); /* White background for the card */
+  color: var(--text-dark); /* Dark text for better contrast on white card */
+  border-radius: 10px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08); /* Soft shadow */
+  padding: var(--spacing-container); /* Padding inside the card */
+  display: flex;
+  flex-direction: column; /* Stack elements vertically */
+  align-items: flex-start; /* Align content to the left */
+  text-align: left; /* Text alignment */
+  cursor: pointer;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  /* --- UPDATED: Reduced min-height for more compact cards --- */
+  min-height: 210px; /* Adjusted min-height */
+  height: auto; /* Allow height to adjust based on content */
+  justify-content: space-between; /* Distribute content vertically, push button to bottom */
+  position: relative;
+}
+
+.module-card:hover {
+  transform: translateY(-5px); /* Subtle lift */
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15); /* Enhanced shadow on hover */
+}
+
+.module-card-icon-container {
+  margin-bottom: var(--spacing-cells);
+  /* --- UPDATED: Reduced icon container size --- */
+  width: 45px;
+  height: 45px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--border-radius-standard);
+  flex-shrink: 0; /* Prevent shrinking if text is long */
+  /* --- UPDATED: Reduced Font Awesome icon size --- */
+  font-size: 32px; /* Size of the Font Awesome icon */
+}
+
+/* Specific colors for the icon container background and the icon itself */
+.module-card.scheduling .module-card-icon-container { background-color: rgba(0, 123, 255, 0.1); color: var(--primary-blue); }
+.module-card.scheduling .module-card-btn { background-color: var(--primary-blue); color: var(--text-light); }
+.module-card.scheduling .module-card-btn:hover { background-color: var(--primary-blue); filter: brightness(90%); }
+
+
+.module-card.support-delivery .module-card-icon-container { background-color: rgba(40, 167, 69, 0.1); color: #28a745; }
+.module-card.support-delivery .module-card-btn { background-color: #28a745; color: var(--text-light); }
+.module-card.support-delivery .module-card-btn:hover { background-color: #28a745; filter: brightness(90%); }
+
+.module-card.attendance-tracking .module-card-icon-container { background-color: rgba(255, 193, 7, 0.1); color: #ffc107; }
+.module-card.attendance-tracking .module-card-btn { background-color: #ffc107; color: var(--text-dark); } /* Yellow button with dark text */
+.module-card.attendance-tracking .module-card-btn:hover { background-color: #ffc107; filter: brightness(90%); }
+
+.module-card.assessment .module-card-icon-container { background-color: rgba(111, 66, 193, 0.1); color: #6f42c1; }
+.module-card.assessment .module-card-btn { background-color: #6f42c1; color: var(--text-light); }
+.module-card.assessment .module-card-btn:hover { background-color: #6f42c1; filter: brightness(90%); }
+
+.module-card.feedback .module-card-icon-container { background-color: rgba(220, 53, 69, 0.1); color: #dc3545; }
+.module-card.feedback .module-card-btn { background-color: #dc3545; color: var(--text-light); }
+.module-card.feedback .module-card-btn:hover { background-color: #dc3545; filter: brightness(90%); }
+
+
+.module-card-title {
+  /* --- UPDATED: Reduced font size for title --- */
+  font-size: 18px;
+  font-weight: 600; /* Semibold */
+  color: var(--text-dark);
+  margin-bottom: var(--spacing-cells);
+}
+
+.module-card-description {
+  /* --- UPDATED: Reduced font size for description --- */
+  font-size: 12px;
+  font-weight: 400; /* Regular weight */
+  color: var(--text-medium); /* Medium grey for description */
+  line-height: 1.5;
+  flex-grow: 1; /* Allows description to take up available space */
+  margin-bottom: var(--spacing-container); /* Space before button */
+}
+
+.module-card-btn {
+  width: 100%;
+  padding: 10px 15px;
+  border-radius: var(--border-radius-standard);
+  border: none;
+  cursor: pointer;
+  /* --- UPDATED: Reduced font size for button --- */
+  font-size: 13px;
+  font-weight: 500;
+  text-align: center;
+  transition: background-color 0.2s ease, color 0.2s ease;
+  margin-top: auto; /* Push button to the bottom */
+}
+
+
+/* Responsive adjustments for dashboard component */
+@media (max-width: 768px) {
+  .module-cards-grid {
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    padding: var(--spacing-cells); /* Adjust padding for grid on small screens */
+    max-width: 100%;
+    margin: 0;
+  }
+  .module-card {
+    min-height: 190px; /* Adjusted min-height for smaller screens */
+    aspect-ratio: auto; /* Allow height to adjust based on content */
+  }
+  .module-card-icon-container {
+    font-size: 28px;
+    width: 38px;
+    height: 38px;
+  }
+  .module-card-title {
+    font-size: 16px;
+  }
+  .module-card-description {
+    font-size: 11px;
+  }
+  .module-card-btn {
+    font-size: 12px;
+    padding: 7px 10px;
+  }
+}

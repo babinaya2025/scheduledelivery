@@ -1,0 +1,35 @@
+<!-- src/app/app.component.html -->
+<div class="app-container">
+  <header class="app-header">
+    <div class="header-content">
+      <div class="header-center-title">
+        <h1>{{ title }}</h1>
+      </div>
+      <div class="user-controls">
+        <button class="btn primary-btn" (click)="login()">Login</button>
+        <div class="role-selection-dropdown">
+          <label for="role-select" class="sr-only">Select Role</label>
+          <select id="role-select" [(ngModel)]="selectedRole" (change)="onRoleChange($event)" class="role-dropdown">
+            <option *ngFor="let role of availableRoles" [value]="role">{{ role }}</option>
+          </select>
+          <span class="selected-role-display">Current: {{ selectedRole }}</span>
+        </div>
+      </div>
+    </div>
+    <nav class="app-navbar">
+      <ul>
+        <!-- --- UPDATED: Use routerLink for Dashboard navigation --- -->
+        <li><a routerLink="/" routerLinkActive="active" class="nav-item"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main class="app-main-content">
+    <!-- --- NEW: RouterOutlet will display routed components here --- -->
+    <router-outlet></router-outlet>
+  </main>
+
+  <footer class="app-footer">
+    <p>&copy; {{ currentYear }} Ford Scheduling and Delivery. All rights reserved.</p>
+  </footer>
+</div>

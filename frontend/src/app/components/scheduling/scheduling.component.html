@@ -1,0 +1,189 @@
+<!-- src/app/components/scheduling/scheduling.component.html -->
+<div class="scheduling-page-container">
+  <h2>Scheduling Management</h2>
+
+  <!-- Status and Error Messages -->
+  <div *ngIf="errorMessage" class="alert error-alert" role="alert">
+    <i class="fas fa-exclamation-circle"></i> {{ errorMessage }}
+  </div>
+  <div *ngIf="successMessage" class="alert success-alert" role="alert">
+    <i class="fas fa-check-circle"></i> {{ successMessage }}
+  </div>
+
+  <form [formGroup]="scheduleForm">
+    <!-- Section 1: Select Course & View Participants -->
+    <div class="card-section">
+      <h3><i class="fas fa-book"></i> Select Course & View Participants</h3>
+      <div class="form-group">
+        <label for="courseSelect">Training Course:</label>
+        <select id="courseSelect" formControlName="course" class="form-control"
+                [class.is-invalid]="isFormControlInvalid('course')">
+          <option [ngValue]="null" disabled>Select a course</option>
+          <option *ngFor="let course of courses" [value]="course.id">{{ course.name }}</option>
+        </select>
+        <div *ngIf="isFormControlInvalid('course')" class="invalid-feedback">
+          Course is required.
+        </div>
+        <div *ngIf="isLoadingCourses" class="loading-spinner">
+          <i class="fas fa-spinner fa-spin"></i> Loading courses...
+        </div>
+      </div>
+
+      <!-- Trainer Selection Field -->
+      <div class="form-group">
+        <label for="trainerSelect">Assigned Trainer:</label>
+        <select id="trainerSelect" formControlName="trainer" class="form-control"
+                [class.is-invalid]="isFormControlInvalid('trainer')">
+          <option [ngValue]="null" disabled>Select a trainer</option>
+          <option *ngFor="let trainer of trainers" [value]="trainer.id">{{ trainer.name }}</option>
+        </select>
+        <div *ngIf="isFormControlInvalid('trainer')" class="invalid-feedback">
+          Trainer is required.
+        </div>
+        <div *ngIf="isLoadingTrainers" class="loading-spinner">
+          <i class="fas fa-spinner fa-spin"></i> Loading trainers...
+        </div>
+      </div>
+
+      <div *ngIf="selectedCourseId && participants.length > 0" class="participants-list">
+        <h4>Approved Participants ({{ participants.length }}):</h4>
+        <div *ngIf="isLoadingParticipants" class="loading-spinner">
+          <i class="fas fa-spinner fa-spin"></i> Loading participants...
+        </div>
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Name</th>
+              <th>Email</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let participant of participants">
+              <td>{{ participant.id }}</td>
+              <td>{{ participant.name }}</td>
+              <td>{{ participant.email }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div *ngIf="selectedCourseId && !isLoadingParticipants && participants.length === 0" class="info-message">
+        No approved participants found for this course.
+      </div>
+    </div>
+
+    <!-- Section 2: Define & Lock Schedule -->
+    <div class="card-section">
+      <h3><i class="fas fa-calendar-alt"></i> Create & Lock Schedule</h3>
+      <div class="form-group" *ngIf="selectedTrainer">
+        <label>Current Trainer for Schedule:</label>
+        <p class="form-control-static"><strong>{{ selectedTrainer.name }}</strong> ({{ selectedTrainer.email }})</p>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group flex-grow-1">
+          <label for="startDate">Start Date:</label>
+          <input type="date" id="startDate" formControlName="startDate" class="form-control"
+                 [min]="getMinDate()"
+                 [class.is-invalid]="isFormControlInvalid('startDate')">
+          <div *ngIf="isFormControlInvalid('startDate')" class="invalid-feedback">
+            Start Date is required.
+          </div>
+        </div>
+        <div class="form-group flex-grow-1">
+          <label for="startTime">Start Time:</label>
+          <input type="time" id="startTime" formControlName="startTime" class="form-control"
+                 [class.is-invalid]="isFormControlInvalid('startTime')">
+          <div *ngIf="isFormControlInvalid('startTime')" class="invalid-feedback">
+            Start Time is required.
+          </div>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group flex-grow-1">
+          <label for="endDate">End Date:</label>
+          <input type="date" id="endDate" formControlName="endDate" class="form-control"
+                 [min]="getMinDate()"
+                 [class.is-invalid]="isFormControlInvalid('endDate')">
+          <div *ngIf="isFormControlInvalid('endDate')" class="invalid-feedback">
+            End Date is required.
+          </div>
+        </div>
+        <div class="form-group flex-grow-1">
+          <label for="endTime">End Time:</label>
+          <input type="time" id="endTime" formControlName="endTime" class="form-control"
+                 [class.is-invalid]="isFormControlInvalid('endTime')">
+          <div *ngIf="isFormControlInvalid('endTime')" class="invalid-feedback">
+            End Time is required.
+          </div>
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="location">Location:</label>
+        <input type="text" id="location" formControlName="location" class="form-control" placeholder="e.g., Virtual Meeting, Room 301"
+               [class.is-invalid]="isFormControlInvalid('location')">
+        <div *ngIf="isFormControlInvalid('location')" class="invalid-feedback">
+          Location is required.
+        </div>
+      </div>
+
+      <div *ngIf="isFormGroupInvalid() && scheduleForm.errors?.['invalidDateTimeRange']" class="invalid-feedback">
+        End date/time must be after start date/time.
+      </div>
+
+      <div class="schedule-status">
+        <h4>Schedule Status:</h4>
+        <div *ngIf="isLoadingScheduleStatus" class="loading-spinner">
+          <i class="fas fa-spinner fa-spin"></i> Loading status...
+        </div>
+        <p *ngIf="currentScheduleStatus">
+          Status: <span [class.status-locked]="currentScheduleStatus.locked" [class.status-unlocked]="!currentScheduleStatus.locked">
+            {{ currentScheduleStatus.locked ? 'Locked' : 'Unlocked' }}
+          </span>
+          <span *ngIf="currentScheduleStatus.locked">
+            by {{ currentScheduleStatus.lockedBy }} on {{ currentScheduleStatus.lockedAt ? (currentScheduleStatus.lockedAt | date:'medium') : 'N/A' }}
+            from {{ currentScheduleStatus.startDateTime ? (currentScheduleStatus.startDateTime | date:'short') : 'N/A' }} to {{ currentScheduleStatus.endDateTime ? (currentScheduleStatus.endDateTime | date:'short') : 'N/A' }}
+            for Trainer: <strong>{{ currentScheduleStatus.trainerName || 'N/A' }}</strong>
+            at <strong>{{ currentScheduleStatus.location || 'N/A' }}</strong>
+          </span>
+        </p>
+      </div>
+
+      <div class="button-group">
+        <button type="button" class="btn primary-btn" (click)="checkConflicts()"
+                [disabled]="scheduleForm.invalid || isLoadingConflictCheck || !selectedCourseId || !selectedTrainer">
+          <i class="fas fa-sync-alt" [class.fa-spin]="isLoadingConflictCheck"></i> Check Conflicts
+        </button>
+        <button type="button" class="btn success-btn" (click)="lockSchedule()"
+                [disabled]="scheduleForm.invalid || isLoadingLockUnlock || !selectedCourseId || !selectedTrainer || currentScheduleStatus?.locked || !isAdmin">
+          <i class="fas fa-lock" [class.fa-spin]="isLoadingLockUnlock"></i> Lock Schedule
+        </button>
+        <button type="button" class="btn error-btn" (click)="unlockSchedule()"
+                [disabled]="isLoadingLockUnlock || !selectedCourseId || !selectedTrainer || !currentScheduleStatus?.locked || !isAdmin">
+          <i class="fas fa-unlock" [class.fa-spin]="isLoadingLockUnlock"></i> Unlock Schedule
+        </button>
+      </div>
+
+      <div *ngIf="conflictCheckResult" class="conflict-results">
+        <h4 [class.text-danger]="conflictCheckResult.hasConflicts" [class.text-success]="!conflictCheckResult.hasConflicts">
+          Conflict Check Result:
+          <span *ngIf="conflictCheckResult.hasConflicts">Conflicts Found!</span>
+          <span *ngIf="!conflictCheckResult.hasConflicts">No Conflicts.</span>
+        </h4>
+        <ul *ngFor="let conflict of conflictCheckResult.conflicts">
+          <li>{{ conflict }}</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Section 3: Send Calendar Invite -->
+    <div class="card-section">
+      <h3><i class="fas fa-envelope"></i> Send Calendar Invite</h3>
+      <p>Once the schedule is locked, you can send calendar invites to all approved participants and the assigned trainer.</p>
+      <button type="button" class="btn primary-btn" (click)="sendCalendarInvite()"
+              [disabled]="isLoadingSendInvite || !selectedCourseId || !selectedTrainer || !currentScheduleStatus?.locked">
+        <i class="fas fa-paper-plane" [class.fa-spin]="isLoadingSendInvite"></i> Send Calendar Invite
+      </button>
+    </div>
+  </form>
+</div>

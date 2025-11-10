@@ -1,0 +1,289 @@
+/* src/app/components/scheduling/scheduling.component.css */
+
+.scheduling-page-container {
+  padding: var(--spacing-container);
+  max-width: 1000px;
+  margin: var(--spacing-container) auto;
+  background-color: var(--card-bg);
+  border-radius: 10px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+  font-family: 'Inter', sans-serif;
+  color: var(--text-dark);
+}
+
+h2 {
+  font-size: 28px;
+  font-weight: 600;
+  color: var(--navbar-blue); /* Use the darker blue for main headings */
+  margin-bottom: var(--spacing-container);
+  padding-bottom: var(--spacing-cells);
+  border-bottom: 1px solid var(--border-color);
+}
+
+h3 {
+  font-size: 22px;
+  font-weight: 500;
+  color: var(--text-dark);
+  margin-top: var(--spacing-container);
+  margin-bottom: var(--spacing-cells);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+h4 {
+  font-size: 18px;
+  font-weight: 500;
+  color: var(--text-dark);
+  margin-top: var(--spacing-cells);
+  margin-bottom: var(--spacing-cells);
+}
+
+p {
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--text-medium);
+}
+
+.card-section {
+  background-color: var(--card-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  padding: var(--spacing-container);
+  margin-bottom: var(--spacing-container);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+}
+
+/* Form Group Styling */
+.form-group {
+  margin-bottom: var(--spacing-cells);
+}
+
+.form-group label {
+  display: block;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text-dark);
+  margin-bottom: 5px;
+}
+
+.form-control {
+  width: 100%;
+  padding: 10px;
+  font-size: 14px;
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius-standard);
+  box-sizing: border-box; /* Include padding in width */
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.form-control:focus {
+  border-color: var(--primary-blue);
+  box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.25);
+  outline: none;
+}
+
+/* --- NEW: Style for static form controls --- */
+.form-control-static {
+  padding: 10px;
+  font-size: 14px;
+  border: 1px solid #e0e0e0; /* A light border to mimic input fields */
+  border-radius: var(--border-radius-standard);
+  background-color: #f8f8f8; /* Slightly different background */
+  color: var(--text-dark);
+  box-sizing: border-box;
+  display: block; /* Ensure it takes full width */
+}
+/* --- End NEW --- */
+
+.form-control.is-invalid {
+  border-color: var(--error-light);
+}
+
+.invalid-feedback {
+  color: var(--error-light);
+  font-size: 12px;
+  margin-top: 5px;
+}
+
+.form-row {
+  display: flex;
+  gap: var(--spacing-container);
+  margin-bottom: var(--spacing-cells);
+}
+
+.form-row .form-group {
+  flex: 1;
+}
+
+/* Button Styling */
+.btn {
+  padding: 10px 20px;
+  border-radius: var(--border-radius-standard);
+  border: none;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  transition: background-color 0.2s ease, filter 0.2s ease;
+  display: inline-flex; /* For icon alignment */
+  align-items: center;
+  gap: 8px;
+}
+
+.btn:disabled {
+  background-color: #cccccc !important;
+  color: #666666 !important;
+  cursor: not-allowed;
+  filter: none;
+}
+
+.primary-btn {
+  background-color: var(--primary-blue);
+  color: var(--text-light);
+}
+
+.primary-btn:hover:not(:disabled) {
+  filter: brightness(90%);
+}
+
+.success-btn {
+  background-color: #28a745; /* Green */
+  color: var(--text-light);
+}
+
+.success-btn:hover:not(:disabled) {
+  filter: brightness(90%);
+}
+
+.error-btn {
+  background-color: #dc3545; /* Red */
+  color: var(--text-light);
+}
+
+.error-btn:hover:not(:disabled) {
+  filter: brightness(90%);
+}
+
+.button-group {
+  display: flex;
+  gap: var(--spacing-cells);
+  margin-top: var(--spacing-container);
+  flex-wrap: wrap; /* Allow buttons to wrap on smaller screens */
+}
+
+/* Participants Table */
+.participants-list {
+  margin-top: var(--spacing-container);
+}
+
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: var(--spacing-cells);
+}
+
+.data-table th,
+.data-table td {
+  border: 1px solid var(--border-color);
+  padding: var(--spacing-cells);
+  text-align: left;
+  font-size: 13px;
+}
+
+.data-table th {
+  background-color: var(--table-header-bg);
+  font-weight: 600;
+  color: var(--text-dark);
+}
+
+.data-table tbody tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+.data-table tbody tr:hover {
+  background-color: #f0f0f0;
+}
+
+/* Schedule Status */
+.schedule-status {
+  margin-top: var(--spacing-container);
+  padding: var(--spacing-cells);
+  border: 1px dashed var(--border-color);
+  border-radius: var(--border-radius-standard);
+}
+
+.schedule-status p {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.status-locked {
+  color: var(--error-light); /* Red for locked */
+  font-weight: 600;
+}
+
+.status-unlocked {
+  color: #28a745; /* Green for unlocked */
+  font-weight: 600;
+}
+
+/* Conflict Results */
+.conflict-results {
+  margin-top: var(--spacing-container);
+  padding: var(--spacing-cells);
+  border-radius: var(--border-radius-standard);
+  background-color: #fff3cd; /* Warning background */
+  border: 1px solid #ffeeba;
+}
+
+.conflict-results h4 {
+  margin-top: 0;
+  margin-bottom: var(--spacing-cells);
+}
+
+.conflict-results ul {
+  margin: 0;
+  padding-left: var(--spacing-container);
+  list-style-type: disc;
+  font-size: 13px;
+  color: var(--text-dark);
+}
+
+.text-danger {
+  color: var(--error-light);
+}
+
+.text-success {
+  color: #28a745;
+}
+
+/* Alert Messages */
+.alert {
+  padding: var(--spacing-cells) var(--spacing-container);
+  margin-bottom: var(--spacing-container);
+  border-radius: var(--border-radius-standard);
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.alert.error-alert {
+  background-color: var(--error-light);
+  color: #721c24; /* Dark red text */
+  border: 1px solid #f5c6cb;
+}
+
+.alert.success-alert {
+  background-color: var(--success-light);
+  color: #155724; /* Dark green text */
+  border: 1px solid #c3e6cb;
+}
+
+/* Loading Spinner */
+.loading-spinner {
+  font-size: 14px;
+  color: var(--primary-blue);
+  margin-top: var(--spacing-cells);
+}

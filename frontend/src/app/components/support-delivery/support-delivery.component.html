@@ -1,0 +1,214 @@
+<!-- src/app/components/support-delivery/support-delivery.component.html -->
+<div class="support-delivery-container">
+  
+  <!-- Header Section -->
+  <div class="page-header">
+    <h2 class="page-title">
+      <i class="fas fa-life-ring"></i> Support & Delivery Management
+    </h2>
+    <p class="page-subtitle">
+      <span class="role-badge">{{ getRoleDisplayName() }} View</span>
+    </p>
+  </div>
+
+  <!-- Filter Section -->
+  <div class="filter-section">
+    <label for="status-filter" class="filter-label">Filter by Status:</label>
+    <select 
+      id="status-filter" 
+      [(ngModel)]="selectedStatus" 
+      (change)="onStatusChange()" 
+      class="status-filter-dropdown">
+      <option value="all">All Courses</option>
+      <option value="ongoing">Ongoing</option>
+      <option value="completed">Completed</option>
+      <option value="upcoming">Upcoming</option>
+    </select>
+  </div>
+
+  <!-- Loading State -->
+  <div class="loading-container" *ngIf="isLoading">
+    <div class="spinner"></div>
+    <p>Loading courses...</p>
+  </div>
+
+  <!-- Error State -->
+  <div class="error-container" *ngIf="errorMessage && !isLoading">
+    <i class="fas fa-exclamation-triangle error-icon"></i>
+    <p class="error-message">{{ errorMessage }}</p>
+    <button class="btn retry-btn" (click)="loadCourses()">Retry</button>
+  </div>
+
+  <!-- Existing courses-grid section - add *ngIf -->
+  <div class="courses-grid" *ngIf="!isLoading && !errorMessage && filteredCourses.length > 0">
+    <!-- ... existing course cards ... -->
+  </div>
+
+  <!-- Existing empty state - update condition -->
+  <div class="empty-state" *ngIf="!isLoading && !errorMessage && filteredCourses.length === 0">
+    <!-- ... existing empty state ... -->
+  </div>
+
+
+  <!-- Courses Grid -->
+  <div class="courses-grid" *ngIf="filteredCourses.length > 0">
+    <div class="course-card" *ngFor="let course of filteredCourses">
+      
+      <!-- Course Header -->
+      <div class="course-header">
+        <div class="course-title-row">
+          <h3 class="course-title">{{ course.name }}</h3>
+          <span [ngClass]="getStatusBadgeClass(course.status)">
+            {{ course.status | uppercase }}
+          </span>
+        </div>
+        <p class="course-trainer" *ngIf="isAdmin()">
+          <i class="fas fa-chalkboard-teacher"></i> Trainer: <strong>{{ course.trainerName }}</strong>
+        </p>
+      </div>
+
+      <!-- Trainees Section -->
+      <div class="trainees-section" *ngIf="currentRole !== 'Trainee'">
+        <button 
+          class="toggle-btn trainees-toggle-btn" 
+          (click)="toggleTrainees(course)">
+          <i class="fas" [ngClass]="course.showTrainees ? 'fa-chevron-down' : 'fa-chevron-right'"></i>
+          Trainees ({{ course.trainees.length }})
+        </button>
+        
+        <div class="trainees-list" *ngIf="course.showTrainees">
+          <table class="trainees-table">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Email</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let trainee of course.trainees">
+                <td>{{ trainee.id }}</td>
+                <td>{{ trainee.name }}</td>
+                <td>{{ trainee.email }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Weeks Section -->
+      <div class="weeks-section">
+        <h4 class="section-subtitle">
+          <i class="fas fa-calendar-week"></i> Weekly Content
+        </h4>
+        
+        <div class="week-item" *ngFor="let week of course.weeks">
+          <button 
+            class="toggle-btn week-toggle-btn" 
+            (click)="toggleWeek(week)">
+            <i class="fas" [ngClass]="week.expanded ? 'fa-chevron-down' : 'fa-chevron-right'"></i>
+            Week {{ week.weekNumber }}
+          </button>
+
+          <div class="week-details" *ngIf="week.expanded">
+            
+            <!-- Topics -->
+            <div class="topics-container">
+              <h5 class="subsection-title">Topics:</h5>
+              <div class="topic-item" *ngFor="let topic of week.topics">
+                <label class="topic-checkbox-label">
+                  <input 
+                    type="checkbox" 
+                    [checked]="topic.covered"
+                    [disabled]="!canEdit()"
+                    (change)="updateTopicStatus(topic, week, course)"
+                    class="topic-checkbox">
+                  <span [class.topic-covered]="topic.covered">{{ topic.name }}</span>
+                </label>
+              </div>
+            </div>
+
+            <!-- Links Section -->
+            <div class="links-container">
+              
+              <!-- Drive Link -->
+              <div class="link-row">
+                <label class="link-label">
+                  <i class="fab fa-google-drive"></i> Drive Link:
+                </label>
+                <input 
+                  *ngIf="canEdit()" 
+                  type="url" 
+                  [value]="week.driveLink"
+                  (change)="updateLink('drive', week, course, $event)"
+                  placeholder="Enter Google Drive link"
+                  class="link-input">
+                <a 
+                  *ngIf="!canEdit() && week.driveLink" 
+                  [href]="week.driveLink" 
+                  target="_blank" 
+                  class="link-view">
+                  {{ week.driveLink }}
+                </a>
+                <span *ngIf="!canEdit() && !week.driveLink" class="link-empty">No link provided</span>
+              </div>
+
+              <!-- GitHub Link -->
+              <div class="link-row">
+                <label class="link-label">
+                  <i class="fab fa-github"></i> GitHub Link:
+                </label>
+                <input 
+                  *ngIf="canEdit()" 
+                  type="url" 
+                  [value]="week.githubLink"
+                  (change)="updateLink('github', week, course, $event)"
+                  placeholder="Enter GitHub repository link"
+                  class="link-input">
+                <a 
+                  *ngIf="!canEdit() && week.githubLink" 
+                  [href]="week.githubLink" 
+                  target="_blank" 
+                  class="link-view">
+                  {{ week.githubLink }}
+                </a>
+                <span *ngIf="!canEdit() && !week.githubLink" class="link-empty">No link provided</span>
+              </div>
+
+              <!-- Assignment Link -->
+              <div class="link-row">
+                <label class="link-label">
+                  <i class="fas fa-tasks"></i> Assignment:
+                </label>
+                <input 
+                  *ngIf="canEdit()" 
+                  type="url" 
+                  [value]="week.assignmentLink"
+                  (change)="updateLink('assignment', week, course, $event)"
+                  placeholder="Enter assignment link"
+                  class="link-input">
+                <a 
+                  *ngIf="!canEdit() && week.assignmentLink" 
+                  [href]="week.assignmentLink" 
+                  target="_blank" 
+                  class="link-view">
+                  {{ week.assignmentLink }}
+                </a>
+                <span *ngIf="!canEdit() && !week.assignmentLink" class="link-empty">No link provided</span>
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Empty State -->
+  <div class="empty-state" *ngIf="filteredCourses.length === 0">
+    <i class="fas fa-inbox empty-icon"></i>
+    <p class="empty-message">No courses found for the selected filter.</p>
+  </div>
+
+</div>

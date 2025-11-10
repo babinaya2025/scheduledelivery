@@ -1,0 +1,61 @@
+<hr>
+<hr>
+<div class="scheduling-container">
+  <h2>Training Course Scheduling </h2>
+
+  <div class="course-selection">
+    <label for="course-select">Select Course :</label>
+    <select id="course-select" (change)="onCourseSelect($event)" [disabled]="isLoadingCourses">
+      <option [value]="null">-- Select a Course --</option>
+      <option *ngFor="let course of courses" [value]="course.id">
+        {{ course.name }} (ID: {{ course.id }})
+      </option>
+    </select>
+    <div *ngIf="isLoadingCourses">Loading courses...</div>
+  </div>
+
+  <hr>
+
+  <div *ngIf="errorMessage" class="error-message">
+    ⚠️ {{ errorMessage }}
+  </div>
+<hr>
+<h4> selected course will be displayed below after selecting the course </h4>
+  <!--<div *ngIf="selectedCourseId && !isLoadingParticipants">  </div>-->
+    <h3>Approved Participants List (Course ID: {{ selectedCourseId }})</h3>
+
+    <div *ngIf="participants.length === 0">
+      <p>No approved participants found for this course, or data is pending from the PO Module.</p>
+    </div>
+    <h6> When participants list is available </h6>
+    <!--<table *ngIf="participants.length > 0">-->
+      <table>
+<thead>
+        <tr>
+          <th>    Participant EmailID    </th>   
+          <th>    || Participant Name</th>          
+          
+      <!--<th>PO Reference</th>-->    
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let p of participants">
+          <td>{{ p.id }}</td>
+          <td>{{ p.name }}</td>
+
+        <!--<td>**{{ p.poRef }}**</td> -->
+         </tr>
+      </tbody>
+      </table>
+      
+    <!--</table>-->
+ 
+
+  <div *ngIf="isLoadingParticipants" class="loading-state">
+    <p>... Loading approved participants from PO Module ...</p>
+  </div>
+
+  <div *ngIf="!selectedCourseId" class="initial-state">
+    <p>Please select a training course to view the approved list of participants.</p>
+  </div>
+</div>

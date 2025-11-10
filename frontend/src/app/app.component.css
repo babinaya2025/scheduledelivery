@@ -1,0 +1,227 @@
+/* src/app/app.component.css */
+
+/* Header */
+.app-header {
+  background-color: var(--navbar-blue);
+  color: var(--text-light);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1000; /* Ensure header is above other content */
+}
+
+.header-content {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 8px var(--spacing-container); /* Reduced top/bottom padding to 8px */
+  padding-bottom: 0; /* Nav bar will provide its own padding */
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.header-center-title {
+  flex-grow: 1;
+  text-align: center;
+}
+
+.header-center-title h1 {
+  margin: 0;
+  font-size: 28px;
+  font-weight: 600; /* Semibold */
+  letter-spacing: 0.5px;
+  color: var(--text-light);
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+}
+
+.user-controls {
+  position: absolute;
+  right: var(--spacing-container);
+  top: 8px; /* Matches new header-content top padding */
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  flex-shrink: 0;
+}
+
+.btn {
+  padding: 10px 20px;
+  border-radius: var(--border-radius-standard);
+  border: none;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  transition: background-color 0.3s ease;
+}
+
+.primary-btn {
+  background-color: var(--primary-blue);
+  color: var(--text-light);
+}
+
+.primary-btn:hover {
+  filter: brightness(90%);
+}
+
+.role-selection-dropdown {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--text-light);
+  font-size: 14px;
+}
+
+.role-dropdown {
+  background-color: rgba(255, 255, 255, 0.1);
+  color: var(--text-light);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: var(--border-radius-standard);
+  padding: 8px 12px;
+  font-size: 14px;
+  font-weight: 400; /* Regular weight */
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  cursor: pointer;
+  min-width: 100px;
+}
+
+.role-dropdown:hover {
+  background-color: rgba(255, 255, 255, 0.2);
+}
+
+.role-dropdown option {
+  background-color: var(--navbar-blue);
+  color: var(--text-light);
+}
+
+.selected-role-display {
+  font-size: 13px;
+  font-weight: 400;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+/* Navigation Bar (part of the header) */
+.app-navbar {
+  background-color: var(--navbar-blue);
+  padding: 0 var(--spacing-container); /* Only horizontal padding, vertical will be handled by nav-item */
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.app-navbar ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  gap: 10px;
+}
+
+.app-navbar li {
+  padding: 0;
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: rgba(255, 255, 255, 0.7);
+  text-decoration: none;
+  padding: 4px 15px; /* Reduced top/bottom padding to 4px */
+  border-radius: var(--border-radius-standard);
+  transition: background-color 0.3s ease, color 0.3s ease;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.nav-item:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+  color: var(--text-light);
+}
+
+.nav-item.active {
+  background-color: var(--primary-blue);
+  color: var(--text-light);
+}
+
+/* Main Content Area */
+.app-main-content {
+  flex-grow: 1; /* Main content takes remaining space */
+  margin-top: var(--calculated-header-height);
+  margin-bottom: 0; /* No fixed footer, so no margin-bottom */
+  padding-left: var(--spacing-container);
+  padding-right: var(--spacing-container);
+  overflow-y: visible; /* Let the body scroll if content > viewport height */
+  max-width: 100%;
+  padding-top: 0;
+  padding-bottom: 0;
+  background: transparent;
+  border: none;
+  border-radius: 0;
+  box-shadow: none;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+/* Footer */
+.app-footer {
+  background-color: var(--navbar-blue);
+  color: rgba(255, 255, 255, 0.7);
+  text-align: center;
+  padding: var(--spacing-container);
+  font-size: 12px;
+  font-weight: 400;
+  position: static; /* Footer is static (non-fixed) */
+  z-index: auto;
+  margin-top: auto; /* Pushes footer to the bottom of the app-container if content is short */
+  flex-shrink: 0; /* Prevents footer from shrinking */
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  /* Adjust header/footer heights for responsive padding */
+  :root {
+    /* Recalculate based on stacked header elements */
+    /* header-content (8px*2 padding + 26px h1) + user-controls (approx 40px) + app-navbar (4px*2 padding + 14px nav-item) */
+    --calculated-header-height: 140px; /* Estimate for stacked header on small screens with reduced padding */
+  }
+
+  .header-content {
+    flex-direction: column;
+    align-items: center;
+    padding-bottom: var(--spacing-cells);
+  }
+  .user-controls {
+    position: static;
+    width: 100%;
+    justify-content: space-between;
+    margin-top: 10px;
+    padding: 0 var(--spacing-container);
+  }
+  .header-center-title {
+    margin-top: 10px;
+    margin-bottom: 10px;
+  }
+  .header-center-title h1 {
+    font-size: 26px;
+  }
+  .app-navbar ul {
+    justify-content: center;
+  }
+}

@@ -1,0 +1,11 @@
+<!-- src/app/components/dashboard/dashboard.component.html -->
+<div class="module-cards-grid">
+  <div class="module-card" *ngFor="let module of modules" [ngClass]="getCardColorClass(module.name)">
+    <div class="module-card-icon-container">
+      <i class="fas fa-{{ module.icon }}"></i>
+    </div>
+    <div class="module-card-title">{{ module.name }}</div>
+    <p class="module-card-description">{{ module.overview }}</p>
+    <button class="btn module-card-btn" (click)="openModulePage(module.route)">{{ module.buttonLabel }}</button>
+  </div>
+</div>
