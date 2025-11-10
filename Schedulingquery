@@ -1,176 +1,78 @@
--- ========================================
+-- TRUNCATE/DELETE existing data (ONLY RUN THIS IF YOU WANT TO CLEAR ALL DATA)
+-- If you run this, you must re-insert all data below.
+-- DELETE FROM PO_ORDER;
+-- DELETE FROM SCHEDULE;
+-- DELETE FROM ENROLLMENT;
+-- DELETE FROM EVENT;
+-- DELETE FROM APP_USER;
+-- DELETE FROM TRAINER;
+
+
+-- 1. Insert Trainers
+INSERT INTO TRAINER (TRAINER_ID, TRAINER_FIRST_NAME, TRAINER_LAST_NAME, TRAINER_EMAIL_ID, EXPERTISE_AREA) VALUES (1, 'Dr.', 'Reed', 'evelyn.reed@example.com', 'Angular');
+INSERT INTO TRAINER (TRAINER_ID, TRAINER_FIRST_NAME, TRAINER_LAST_NAME, TRAINER_EMAIL_ID, EXPERTISE_AREA) VALUES (2, 'Mr.', 'Turner', 'alex.turner@example.com', 'Cloud');
+INSERT INTO TRAINER (TRAINER_ID, TRAINER_FIRST_NAME, TRAINER_LAST_NAME, TRAINER_EMAIL_ID, EXPERTISE_AREA) VALUES (3, 'Ms.', 'Connor', 'sarah.connor@example.com', 'Agile');
+INSERT INTO TRAINER (TRAINER_ID, TRAINER_FIRST_NAME, TRAINER_LAST_NAME, TRAINER_EMAIL_ID, EXPERTISE_AREA) VALUES (4, 'Mr.', 'Patel', 'raj.patel@example.com', 'Python');
+
+
+-- 2. Insert Events (Courses) - Link to Trainers
+-- Columns: EVENT_ID, EVENT_NAME, TRAINER_ID, DESCRIPTION, REQUEST_ID, PARTICIPANTS_COUNT, DURATION, EVENT_TYPE, FUNDING_SOURCE
+INSERT INTO EVENT (EVENT_ID, EVENT_NAME, TRAINER_ID, DESCRIPTION, REQUEST_ID, PARTICIPANTS_COUNT, DURATION, EVENT_TYPE, FUNDING_SOURCE) VALUES ('C001', 'Angular Development Basics', 1, 'Foundational Angular concepts for beginners.', 'REQ001', 15, 16, 'Online', 'PO Module'); -- Trainer Reed
+INSERT INTO EVENT (EVENT_ID, EVENT_NAME, TRAINER_ID, DESCRIPTION, REQUEST_ID, PARTICIPANTS_COUNT, DURATION, EVENT_TYPE, FUNDING_SOURCE) VALUES ('C002', 'Cloud Native Architectures', 2, 'Building scalable applications in the cloud.', 'REQ002', 20, 24, 'Classroom', 'Internal Budget'); -- Trainer Turner
+INSERT INTO EVENT (EVENT_ID, EVENT_NAME, TRAINER_ID, DESCRIPTION, REQUEST_ID, PARTICIPANTS_COUNT, DURATION, EVENT_TYPE, FUNDING_SOURCE) VALUES ('C003', 'Advanced TypeScript Patterns', 1, 'Deep dive into advanced TypeScript features.', 'REQ003', 10, 12, 'Online', 'PO Module'); -- Trainer Reed
+INSERT INTO EVENT (EVENT_ID, EVENT_NAME, TRAINER_ID, DESCRIPTION, REQUEST_ID, PARTICIPANTS_COUNT, DURATION, EVENT_TYPE, FUNDING_SOURCE) VALUES ('C004', 'Agile Project Management', 3, 'Agile methodologies and practices for teams.', 'REQ004', 25, 8, 'Classroom', 'Internal Budget'); -- Trainer Connor
+INSERT INTO EVENT (EVENT_ID, EVENT_NAME, TRAINER_ID, DESCRIPTION, REQUEST_ID, PARTICIPANTS_COUNT, DURATION, EVENT_TYPE, FUNDING_SOURCE) VALUES ('C005', 'Python for Data Science', 4, 'Introduction to Data Science with Python.', 'REQ005', 18, 20, 'Online', 'PO Module'); -- Trainer Patel
+
+
+-- 3. Insert Users (Participants)
+-- Columns: USER_ID, FIRST_NAME, LAST_NAME, EMAIL, DEPARTMENT_ID, ROLE, REGION_ID, MANAGER_NAME, MANAGER_EMAIL_ID
+INSERT INTO APP_USER (USER_ID, FIRST_NAME, LAST_NAME, EMAIL, DEPARTMENT_ID, ROLE, REGION_ID, MANAGER_NAME, MANAGER_EMAIL_ID) VALUES (101, 'Alice', 'Smith', 'alice.smith@example.com', 1, 'Participant', 1, 'Manager A', 'manager.a@example.com');
+INSERT INTO APP_USER (USER_ID, FIRST_NAME, LAST_NAME, EMAIL, DEPARTMENT_ID, ROLE, REGION_ID, MANAGER_NAME, MANAGER_EMAIL_ID) VALUES (102, 'Bob', 'Johnson', 'bob.johnson@example.com', 1, 'Participant', 1, 'Manager A', 'manager.a@example.com');
+INSERT INTO APP_USER (USER_ID, FIRST_NAME, LAST_NAME, EMAIL, DEPARTMENT_ID, ROLE, REGION_ID, MANAGER_NAME, MANAGER_EMAIL_ID) VALUES (103, 'Charlie', 'Brown', 'charlie.brown@example.com', 2, 'Participant', 2, 'Manager B', 'manager.b@example.com');
+INSERT INTO APP_USER (USER_ID, FIRST_NAME, LAST_NAME, EMAIL, DEPARTMENT_ID, ROLE, REGION_ID, MANAGER_NAME, MANAGER_EMAIL_ID) VALUES (104, 'Diana', 'Prince', 'diana.prince@example.com', 2, 'Participant', 2, 'Manager B', 'manager.b@example.com');
+INSERT INTO APP_USER (USER_ID, FIRST_NAME, LAST_NAME, EMAIL, DEPARTMENT_ID, ROLE, REGION_ID, MANAGER_NAME, MANAGER_EMAIL_ID) VALUES (105, 'Clark', 'Kent', 'clark.kent@example.com', 3, 'Participant', 3, 'Manager C', 'manager.c@example.com');
+INSERT INTO APP_USER (USER_ID, FIRST_NAME, LAST_NAME, EMAIL, DEPARTMENT_ID, ROLE, REGION_ID, MANAGER_NAME, MANAGER_EMAIL_ID) VALUES (106, 'Bruce', 'Wayne', 'bruc.wayne@example.com', 3, 'Participant', 3, 'Manager C', 'manager.c@example.com');
+INSERT INTO APP_USER (USER_ID, FIRST_NAME, LAST_NAME, EMAIL, DEPARTMENT_ID, ROLE, REGION_ID, MANAGER_NAME, MANAGER_EMAIL_ID) VALUES (107, 'Abi', 'N', 'babinay1@ford.com', 4, 'Admin', 1, 'Manager D', 'manager.d@example.com'); -- Abi for testing
+
+
+-- 4. Insert POs (Purchase Orders) - Link users to events with approval status
+-- Columns: ORDER_ID, EVENT_ID, USER_ID, VENDOR_ID, ORDER_DATE, AMOUNTINR, AMOUNTUSD, PO_STATUS, TRAINER_ID, SCHEDULE_STATUS
+
+-- POs for C001 (Angular Development Basics) - Trainer Reed (ID 1)
+INSERT INTO PO_ORDER (ORDER_ID, EVENT_ID, USER_ID, VENDOR_ID, ORDER_DATE, AMOUNTINR, AMOUNTUSD, PO_STATUS, TRAINER_ID, SCHEDULE_STATUS) VALUES (1, 'C001', 101, 100, CURRENT_DATE, 100.0, 1.2, 'APPROVED', 1, 'PENDING'); -- Alice
+INSERT INTO PO_ORDER (ORDER_ID, EVENT_ID, USER_ID, VENDOR_ID, ORDER_DATE, AMOUNTINR, AMOUNTUSD, PO_STATUS, TRAINER_ID, SCHEDULE_STATUS) VALUES (2, 'C001', 102, 100, CURRENT_DATE, 100.0, 1.2, 'APPROVED', 1, 'PENDING'); -- Bob
+INSERT INTO PO_ORDER (ORDER_ID, EVENT_ID, USER_ID, VENDOR_ID, ORDER_DATE, AMOUNTINR, AMOUNTUSD, PO_STATUS, TRAINER_ID, SCHEDULE_STATUS) VALUES (3, 'C001', 107, 100, CURRENT_DATE, 100.0, 1.2, 'APPROVED', 1, 'PENDING'); -- Abi (for C001)
+INSERT INTO PO_ORDER (ORDER_ID, EVENT_ID, USER_ID, VENDOR_ID, ORDER_DATE, AMOUNTINR, AMOUNTUSD, PO_STATUS, TRAINER_ID, SCHEDULE_STATUS) VALUES (7, 'C001', 103, 100, CURRENT_DATE, 100.0, 1.2, 'PENDING', 1, 'PENDING'); -- Charlie (PENDING, so won't show up as approved)
+
+-- POs for C002 (Cloud Native Architectures) - Trainer Turner (ID 2)
+INSERT INTO PO_ORDER (ORDER_ID, EVENT_ID, USER_ID, VENDOR_ID, ORDER_DATE, AMOUNTINR, AMOUNTUSD, PO_STATUS, TRAINER_ID, SCHEDULE_STATUS) VALUES (4, 'C002', 104, 200, CURRENT_DATE, 150.0, 1.8, 'APPROVED', 2, 'PENDING'); -- Diana
+INSERT INTO PO_ORDER (ORDER_ID, EVENT_ID, USER_ID, VENDOR_ID, ORDER_DATE, AMOUNTINR, AMOUNTUSD, PO_STATUS, TRAINER_ID, SCHEDULE_STATUS) VALUES (5, 'C002', 105, 200, CURRENT_DATE, 150.0, 1.8, 'PENDING', 2, 'PENDING'); -- Clark (PENDING)
+INSERT INTO PO_ORDER (ORDER_ID, EVENT_ID, USER_ID, VENDOR_ID, ORDER_DATE, AMOUNTINR, AMOUNTUSD, PO_STATUS, TRAINER_ID, SCHEDULE_STATUS) VALUES (8, 'C002', 102, 200, CURRENT_DATE, 150.0, 1.8, 'APPROVED', 2, 'PENDING'); -- Bob (for C002)
+
+-- POs for C003 (Advanced TypeScript Patterns) - Trainer Reed (ID 1)
+INSERT INTO PO_ORDER (ORDER_ID, EVENT_ID, USER_ID, VENDOR_ID, ORDER_DATE, AMOUNTINR, AMOUNTUSD, PO_STATUS, TRAINER_ID, SCHEDULE_STATUS) VALUES (6, 'C003', 106, 100, CURRENT_DATE, 120.0, 1.5, 'APPROVED', 1, 'PENDING'); -- Bruce
+
+-- POs for C005 (Python for Data Science) - Trainer Patel (ID 4)
+INSERT INTO PO_ORDER (ORDER_ID, EVENT_ID, USER_ID, VENDOR_ID, ORDER_DATE, AMOUNTINR, AMOUNTUSD, PO_STATUS, TRAINER_ID, SCHEDULE_STATUS) VALUES (9, 'C005', 101, 300, CURRENT_DATE, 200.0, 2.5, 'APPROVED', 4, 'PENDING'); -- Alice (for C005)
+
+
+-- 5. Insert Schedules
+-- Columns: SCHEDULE_ID, EVENT_ID, TRAINER_ID, START_DATE_TIME, END_DATE_TIME, LOCATION, SCHEDULE_STATUS, LAST_MODIFIED, LOCKED_BY_ADMIN_ID
+-- NOTE: START_DATE_TIME and END_DATE_TIME should be in 'YYYY-MM-DD HH:MM:SS' format for H2
+-- Make sure schedule_id values are unique.
+INSERT INTO SCHEDULE (SCHEDULE_ID, EVENT_ID, TRAINER_ID, START_DATE_TIME, END_DATE_TIME, LOCATION, SCHEDULE_STATUS, LAST_MODIFIED, LOCKED_BY_ADMIN_ID) VALUES (101, 'C001', 1, '2025-11-10 09:00:00', '2025-11-10 17:00:00', 'Virtual Room A', 'UNLOCKED', CURRENT_TIMESTAMP, NULL);
+INSERT INTO SCHEDULE (SCHEDULE_ID, EVENT_ID, TRAINER_ID, START_DATE_TIME, END_DATE_TIME, LOCATION, SCHEDULE_STATUS, LAST_MODIFIED, LOCKED_BY_ADMIN_ID) VALUES (102, 'C002', 2, '2025-11-15 10:00:00', '2025-11-15 14:00:00', 'Conf Room 3', 'LOCKED', CURRENT_TIMESTAMP, 'AdminUser123');
+INSERT INTO SCHEDULE (SCHEDULE_ID, EVENT_ID, TRAINER_ID, START_DATE_TIME, END_DATE_TIME, LOCATION, SCHEDULE_STATUS, LAST_MODIFIED, LOCKED_BY_ADMIN_ID) VALUES (103, 'C003', 1, '2025-11-20 13:00:00', '2025-11-20 17:00:00', 'Virtual Room B', 'UNLOCKED', CURRENT_TIMESTAMP, NULL);
+-- Add more schedule data as needed for testing conflict checks etc.
+
+
+-- You can run SELECT statements to verify:
+ SELECT * FROM TRAINER;
+ SELECT * FROM EVENT;
+ SELECT * FROM APP_USER;
+ SELECT * FROM PO_ORDER;
+ SELECT * FROM SCHEDULE;
+SELECT * FROM TOPIC;
+SELECT * FROM WEEK ;
+SELECT * FROM ENROLLMENT ;
 
--- INSERT TRAINERS
-
--- ========================================
-
-INSERT INTO trainer (trainer_id, trainer_first_name, trainer_last_name, trainer_email_id, expertise_area) VALUES
-
-(1, 'John', 'Doe', 'john.doe@ford.com', 'Frontend Development'),
-
-(2, 'Jane', 'Smith', 'jane.smith@ford.com', 'Backend Development'),
-
-(3, 'Michael', 'Johnson', 'michael.j@ford.com', 'Data Science');
- 
--- ========================================
-
--- INSERT USERS (Trainees + Admin)
-
--- ========================================
-
-INSERT INTO app_user (user_id, first_name, last_name, email, department_id, role, region_id, manager_name, manager_email_id) VALUES
-
-(100, 'Alice', 'Smith', 'alice@ford.com', 1, 'TRAINEE', 1, 'Manager One', 'manager1@ford.com'),
-
-(101, 'Bob', 'Johnson', 'bob@ford.com', 1, 'TRAINEE', 1, 'Manager One', 'manager1@ford.com'),
-
-(102, 'Charlie', 'Brown', 'charlie@ford.com', 1, 'TRAINEE', 1, 'Manager Two', 'manager2@ford.com'),
-
-(103, 'David', 'Lee', 'david@ford.com', 2, 'TRAINEE', 1, 'Manager Two', 'manager2@ford.com'),
-
-(104, 'Eva', 'Martinez', 'eva@ford.com', 2, 'TRAINEE', 1, 'Manager Three', 'manager3@ford.com'),
-
-(105, 'Frank', 'Wilson', 'frank@ford.com', 3, 'TRAINEE', 2, 'Manager Three', 'manager3@ford.com'),
-
-(200, 'Admin', 'User', 'admin@ford.com', 1, 'ADMIN', 1, 'CEO', 'ceo@ford.com');
- 
--- ========================================
-
--- INSERT EVENTS
-
--- ========================================
-
-INSERT INTO event (event_id, event_name, trainer_id, description, request_id, participants_count, duration, event_type, funding_source) VALUES
-
-('EVT001', 'Angular Advanced', 1, 'Advanced Angular concepts', 'REQ001', 3, 40, 'Technical', 'Company'),
-
-('EVT002', 'React Fundamentals', 2, 'React basics and hooks', 'REQ002', 2, 30, 'Technical', 'Company'),
-
-('EVT003', 'Python for Data Science', 3, 'Python and data analysis', 'REQ003', 2, 50, 'Technical', 'Company'),
-
-('EVT004', 'Node.js Backend', 2, 'RESTful APIs with Node.js', 'REQ004', 2, 35, 'Technical', 'Company');
- 
--- ========================================
-
--- INSERT SCHEDULES
-
--- ========================================
-
-INSERT INTO schedule (event_id, trainer_id, start_date_time, end_date_time, location, schedule_status, last_modified, locked_by_admin_id) VALUES
-
-('EVT001', 1, '2025-11-01 09:00:00', '2025-12-15 17:00:00', 'Room A', 'locked', CURRENT_TIMESTAMP, 'ADMIN001'),
-
-('EVT002', 2, '2024-09-01 09:00:00', '2024-10-15 17:00:00', 'Room B', 'locked', CURRENT_TIMESTAMP, 'ADMIN001'),
-
-('EVT003', 3, '2026-01-15 09:00:00', '2026-03-01 17:00:00', 'Room C', 'locked', CURRENT_TIMESTAMP, 'ADMIN001'),
-
-('EVT004', 2, '2025-12-20 09:00:00', '2026-02-01 17:00:00', 'Room D', 'locked', CURRENT_TIMESTAMP, 'ADMIN001');
- 
--- ========================================
-
--- INSERT ENROLLMENTS
-
--- ========================================
-
-INSERT INTO enrollment (schedule_id, user_id, enrollment_date, status) VALUES
-
-(1, 100, CURRENT_TIMESTAMP, 'approved'),
-
-(1, 101, CURRENT_TIMESTAMP, 'approved'),
-
-(1, 102, CURRENT_TIMESTAMP, 'approved'),
-
-(2, 103, CURRENT_TIMESTAMP, 'approved'),
-
-(2, 104, CURRENT_TIMESTAMP, 'approved'),
-
-(3, 100, CURRENT_TIMESTAMP, 'approved'),
-
-(3, 105, CURRENT_TIMESTAMP, 'approved'),
-
-(4, 101, CURRENT_TIMESTAMP, 'approved'),
-
-(4, 102, CURRENT_TIMESTAMP, 'approved');
- 
--- ========================================
-
--- INSERT WEEKS
-
--- ========================================
-
-INSERT INTO week (event_id, week_number, drive_link, github_link, assignment_link) VALUES
-
-('EVT001', 1, 'https://drive.google.com/angular-w1', 'https://github.com/training/angular-w1', 'https://drive.google.com/assign-ang-1'),
-
-('EVT001', 2, 'https://drive.google.com/angular-w2', 'https://github.com/training/angular-w2', 'https://drive.google.com/assign-ang-2'),
-
-('EVT001', 3, 'https://drive.google.com/angular-w3', 'https://github.com/training/angular-w3', ''),
-
-('EVT001', 4, '', '', ''),
-
-('EVT002', 1, 'https://drive.google.com/react-w1', 'https://github.com/training/react-w1', 'https://drive.google.com/assign-react-1'),
-
-('EVT002', 2, 'https://drive.google.com/react-w2', 'https://github.com/training/react-w2', 'https://drive.google.com/assign-react-2'),
-
-('EVT003', 1, '', '', ''),
-
-('EVT003', 2, '', '', ''),
-
-('EVT004', 1, '', '', '');
- 
--- ========================================
-
--- INSERT TOPICS
-
--- ========================================
-
-INSERT INTO topic (week_id, topic_name, covered) VALUES
-
-(1, 'Components & Templates', TRUE),
-
-(1, 'Data Binding', TRUE),
-
-(1, 'Directives', TRUE),
-
-(2, 'Services & DI', TRUE),
-
-(2, 'Observables & RxJS', TRUE),
-
-(2, 'HTTP Client', FALSE),
-
-(3, 'Routing', FALSE),
-
-(3, 'Forms', FALSE),
-
-(3, 'Pipes', FALSE),
-
-(4, 'State Management', FALSE),
-
-(4, 'Testing', FALSE),
-
-(5, 'JSX & Components', TRUE),
-
-(5, 'Props & State', TRUE),
-
-(5, 'Event Handling', TRUE),
-
-(6, 'Hooks', TRUE),
-
-(6, 'Context API', TRUE),
-
-(6, 'React Router', TRUE),
-
-(7, 'Python Basics', FALSE),
-
-(7, 'NumPy', FALSE),
-
-(8, 'Pandas', FALSE),
-
-(8, 'Visualization', FALSE),
-
-(9, 'Express Setup', FALSE),
-
-(9, 'Middleware', FALSE),
-
-(9, 'REST API', FALSE);
- 
